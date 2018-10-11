@@ -1,0 +1,24 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1539021305965.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1726052118",
+    "id" : "4A1D40AF",
+    "lastKnownWriteTime" : 1539179530,
+    "last_content_update" : 1539179530343,
+    "path" : "~/R/Bayer/Bayer1.R",
+    "project_path" : "Bayer1.R",
+    "properties" : {
+        "cursorPosition" : "92,0",
+        "notebook_format" : "html_document",
+        "scrollLine" : "80",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
