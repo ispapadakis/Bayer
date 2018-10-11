@@ -36,10 +36,10 @@ vignettes/*.pdf
 rsconnect/
 
 # .csv files
-.csv
+*.csv
 
 # PDFs
-.pdf
+*.pdf
 
 # PowerPoints
-.pptx
+*.pptx
