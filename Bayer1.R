@@ -142,10 +142,11 @@ summary(nb.qpois)
 #grid()
 
 library(pscl)
-nb.hrd = hurdle(nosebleeds ~  country+tissue.use+previous.year+arm+
-               log(duration)+I(abs(mucus.viscosity-.75)<.25) |  country+eye.colour+tissue.use+previous.year+mucus.viscosity+arm+
-                 log(duration)+I(abs(mucus.viscosity-.75)<.25), dist='negbin', data=Bayer)
+nb.hrd = hurdle(nosebleeds ~ country+previous.year+I(abs(mucus.viscosity-.75)<.25)|  
+                  country+eye.colour+tissue.use+previous.year+mucus.viscosity+arm+
+                 log(duration)+I(abs(mucus.viscosity-.75)<.25), data=Bayer)
 summary(nb.hrd)
+AIC(nb.hrd)
 
 nb.zinfl = zeroinfl(nosebleeds ~  country+tissue.use+previous.year+mucus.viscosity+arm+
                   log(duration)+I(abs(mucus.viscosity-.75)<.25) |  
