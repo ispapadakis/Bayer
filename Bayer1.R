@@ -177,9 +177,8 @@ write.csv(rbind(coef_,aic_),"count_models_est.csv")
 # ML Model
 # Not a great application of ML (only 444 cases)
 numberOfClasses <- length(unique(Bayer$nosebleeds))
-xgb_params <- list("objective" = "multi:softprob",
-                   "eval_metric" = "mlogloss",
-                   "num_class" = numberOfClasses,
+xgb_params <- list("objective" = "count:poisson",
+                   #"eval_metric" = "mlogloss",
                    "min_child" = 5,
                    "eta"=.01)
 nround    <- 450 # number of XGBoost rounds
@@ -197,10 +196,10 @@ cv_model <- xgb.cv(params = xgb_params,
                    verbose = F,
                    prediction = T,
                    stratified=FALSE)
-
-
+plot(cv_model$evaluation_log$test_poisson_nloglik_mean)
+n_opt = which.min(cv_model$evaluation_log$test_poisson_nloglik_mean)
 nb.xgb = xgboost(data = sparse_matrix, label = output_vector,
-                 verbose = F, nrounds = 392, params = xgb_params)
+                 verbose = F, nrounds = n_opt, params = xgb_params)
 
 importance <- xgb.importance(feature_names = colnames(sparse_matrix), model = nb.xgb)
 head(importance)
@@ -209,11 +208,14 @@ xgb.plot.importance(importance_matrix = importance)
 
 # Predictions -------------------------------------------------------------
 # ML Model
-nb.xgb.pred = matrix(predict(nb.xgb,newdata = sparse_matrix),6)
-pred_class = apply(nb.xgb.pred,2,which.max)-1
-table(pred_class)
-table(Bayer$nosebleeds)
-addmargins(table(pred=pred_class,true=Bayer$nosebleeds))
+nb.xgb.pred = predict(nb.xgb,newdata = sparse_matrix)
+
+nb.xgb.pred.group = cut(nb.xgb.pred,c(.3,.38,.41,.45,.49,.57,Inf))
+tapply(Bayer$nosebleeds,nb.xgb.pred.group,mean)
+ggplot(Bayer,aes(nb.xgb.pred.group,nosebleeds)) + geom_boxplot(varwidth = T) +
+  labs(y='Actual Nosebleed Count',
+       x='Predicted Poisson Rate Group') 
+cv_model$evaluation_log[n_opt,]
 
 # Poisson Model
 nosebleeds.exp = exp(predict(nb.pois))
